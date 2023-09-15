@@ -15,8 +15,8 @@ public class DAO {
 		String mydatabase = "postgres";
 		int porta = 5432;
 		String url = "jdbc:postgresql://" + serverName + ":" + porta +"/" + mydatabase;
-		String username = "username";//change in prod
-		String password = "password";//change in prod
+		String username = "postgres";//change in prod
+		String password = "3006paulo";//change in prod
 		boolean status = false;
 
 		try {
@@ -44,12 +44,34 @@ public class DAO {
 		}
 		return status;
 	}
+
+	public boolean pintarUsuario(){
+		boolean status = false;
+		String sql = "SELECT * FROM usuarios";
+		Statement statement = null;
+		ResultSet resultado = null;
+		try {
+			
+			statement = conexao.createStatement();
+			resultado = statement.executeQuery(sql);
+
+			while (resultado.next()) {
+				String query = resultado.getString("login");
+				System.out.println(query);
+			}
+			statement.close();
+			status = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return status;
+	}
 	
 	public boolean inserirUsuario(Usuario usuario) {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			st.executeUpdate("INSERT INTO usuario (codigo, login, senha, sexo) "
+			st.executeUpdate("INSERT INTO usuarios (codigo, login, senha, sexo) "
 					       + "VALUES ("+usuario.getCodigo()+ ", '" + usuario.getLogin() + "', '"  
 					       + usuario.getSenha() + "', '" + usuario.getSexo() + "');");
 			st.close();
@@ -64,7 +86,7 @@ public class DAO {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			String sql = "UPDATE usuario SET login = '" + usuario.getLogin() + "', senha = '"  
+			String sql = "UPDATE usuarios SET login = '" + usuario.getLogin() + "', senha = '"  
 				       + usuario.getSenha() + "', sexo = '" + usuario.getSexo() + "'"
 					   + " WHERE codigo = " + usuario.getCodigo();
 			st.executeUpdate(sql);
@@ -80,7 +102,7 @@ public class DAO {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			st.executeUpdate("DELETE FROM usuario WHERE codigo = " + codigo);
+			st.executeUpdate("DELETE FROM usuarios WHERE codigo = " + codigo);
 			st.close();
 			status = true;
 		} catch (SQLException u) {  
@@ -95,7 +117,7 @@ public class DAO {
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM usuario");		
+			ResultSet rs = st.executeQuery("SELECT * FROM usuarios");		
 	         if(rs.next()){
 	             rs.last();
 	             usuarios = new Usuario[rs.getRow()];
@@ -119,7 +141,7 @@ public class DAO {
 		
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE usuario.sexo LIKE 'M'");		
+			ResultSet rs = st.executeQuery("SELECT * FROM usuarios WHERE usuarios.sexo LIKE 'M'");		
 	         if(rs.next()){
 	             rs.last();
 	             usuarios = new Usuario[rs.getRow()];

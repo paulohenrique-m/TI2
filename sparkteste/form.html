@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <meta content="text/html; charset = UTF-8" http-equiv="content-type">
+
+    <title>Controle de Estoque</title>
+</head>
+<style>
+    .caixa_request{
+        background-color: grey;
+        display: block;
+        padding: 20px;
+        margin: 10px;
+    }
+</style>
+<script type="text/javascript">
+    function request_form(method, acao, id_form, campos) {
+        var selector = ''
+        var request = '/produto/'+ acao +'?'
+        var first_loop = true;
+        campos.forEach(element => {
+            selector = '#'+ id_form + ' input[name="' + element + '"]';
+            value = document.querySelector(selector).value
+            if(first_loop){
+                request += element + '=' + value
+                first_loop = false;     
+            }else{
+                request += '&'+ element + '=' + value 
+            }
+        });
+        const options = {
+            method: method
+        };
+
+        fetch(request, options).then(response => response.json())
+        .then(data => {
+            // retorno da rota sem precisar ir para outra pagina
+            // fazer o makeall porem usando fetch
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+        location.href = request
+    }
+</script>
+
+
+<body>
+    <h1>Controle de Estoque</h1>
+    <div class="caixa_request">
+        <h2>CRIAR PRODUTO</h2>
+        <form id="create_form">
+            <input type="text" name="descricao" placeholder="descricao">
+            <input type="text" name="preco" placeholder="preco">
+            <input type="text" name="quantidade" placeholder="quantidade">
+            <input type="text" name="dataFabricacao" placeholder="dataFabricacao">
+            <input type="text" name="dataValidade" placeholder="dataValidade">
+            <button type="button" onclick="request_form('POST','insert', 'create_form',['descricao','preco','quantidade','dataFabricacao','dataValidade'])">Enviar</button>
+        </form>
+    </div>
+    <div class="caixa_request">
+        <h2>DELETAR PRODUTO</h2>
+        <form id="del_form">
+            <input type="text" name="id" placeholder="id">
+            <button type="button" onclick="request_form('GET','delete','del_form',['id'])">Enviar</button>
+        </form>
+    </div>
+    <div class="caixa_request">
+        <h2>LISTAR PRODUTO</h2>
+        <form id="read_form">
+            <input type="text" name="order" placeholder="order">
+            <button type="button" onclick="request_form('GET','list','read_form',['order'])">Enviar</button>
+        </form>
+    </div>
+    <div class="caixa_request">
+        <h2>UPDATE PRODUTO</h2>
+        <form id="update_form">
+            <input type="text" name="descricao" placeholder="descricao">
+            <input type="text" name="preco" placeholder="preco">
+            <input type="text" name="quantidade" placeholder="quantidade">
+            <input type="text" name="dataFabricacao" placeholder="dataFabricacao">
+            <input type="text" name="dataValidade" placeholder="dataValidade">
+            <button type="button" onclick="request_form('POST','update','update_form',['descricao','preco','quantidade','dataFabricacao','dataValidade'])">Enviar</button>
+        </form>
+    </div>
+</body>
+
+</html>
